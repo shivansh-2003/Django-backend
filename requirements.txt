@@ -1,0 +1,9 @@
+django
+django-rest-framework
+django-dotenv
+django-cors-headers
+
+python-dotenv
+
+pyyaml
+requests

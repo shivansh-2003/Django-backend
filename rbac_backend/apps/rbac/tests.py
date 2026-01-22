@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from .models import Department, UserDepartmentRole
-from .services import user_has_role
+from .services import is_super_admin, user_has_role
 
 
 class RbacTests(TestCase):
@@ -17,5 +17,17 @@ class RbacTests(TestCase):
 
         self.assertTrue(user_has_role(user, department.id, UserDepartmentRole.READ))
         self.assertFalse(
-            user_has_role(user, department.id, UserDepartmentRole.READ_WRITE)
+            user_has_role(user, department.id, UserDepartmentRole.APPEND)
         )
+
+    def test_super_admin_bypass(self) -> None:
+        user = get_user_model().objects.create_user(
+            username="admin1",
+            email="admin1@example.com",
+            password="pass",
+            is_super_admin=True,
+        )
+        department = Department.objects.create(name="Operations")
+
+        self.assertTrue(is_super_admin(user))
+        self.assertTrue(user_has_role(user, department.id, UserDepartmentRole.ADMIN))

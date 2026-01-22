@@ -5,6 +5,7 @@ from django.db import models
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     last_login_ip = models.GenericIPAddressField(null=True, blank=True)
+    is_super_admin = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.get_username()
